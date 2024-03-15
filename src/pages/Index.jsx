@@ -5,7 +5,6 @@ import { FaChevronLeft, FaChevronRight, FaFilter, FaPlus } from "react-icons/fa"
 const Index = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState("month");
-  const [selectedDay, setSelectedDay] = useState(null);
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure();
@@ -14,13 +13,6 @@ const Index = () => {
 
   const changeMonth = (offset) => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + offset, 1));
-    setSelectedDay(null);
-  };
-
-  const changeDay = (offset) => {
-    const newDay = new Date(selectedDay);
-    newDay.setDate(newDay.getDate() + offset);
-    setSelectedDay(newDay);
   };
 
   const openEventModal = (event) => {
@@ -42,9 +34,10 @@ const Index = () => {
   };
 
   const renderCalendar = () => {
-    if (view === "day") {
-    } else {
-    }
+    // Render calendar based on current view (month, week, day)
+    // Use CSS Grid for layout
+    // Render events as boxes within grid cells
+    // Add click handlers to open event modal
   };
 
   return (
@@ -52,21 +45,9 @@ const Index = () => {
       <Flex align="center" justify="space-between" mb={4}>
         <Heading size="lg">Calendar</Heading>
         <Flex>
-          <Select
-            value={view}
-            onChange={(e) => {
-              setView(e.target.value);
-              if (e.target.value === "day") {
-                setSelectedDay(currentDate);
-              } else {
-                setSelectedDay(null);
-              }
-            }}
-            mr={2}
-          >
+          <Select value={view} onChange={(e) => setView(e.target.value)} mr={2}>
             <option value="month">Month</option>
             <option value="week">Week</option>
-            <option value="day">Day</option>
             <option value="day">Day</option>
           </Select>
           <Button leftIcon={<FaFilter />} onClick={openFilterDrawer}>
@@ -78,11 +59,11 @@ const Index = () => {
         </Flex>
       </Flex>
       <Flex align="center" justify="space-between" mb={4}>
-        <Button leftIcon={<FaChevronLeft />} onClick={() => (view === "day" ? changeDay(-1) : changeMonth(-1))}>
+        <Button leftIcon={<FaChevronLeft />} onClick={() => changeMonth(-1)}>
           Prev
         </Button>
-        <Heading size="md">{view === "day" ? selectedDay.toLocaleString("default", { weekday: "long", month: "long", day: "numeric" }) : currentDate.toLocaleString("default", { month: "long", year: "numeric" })}</Heading>
-        <Button rightIcon={<FaChevronRight />} onClick={() => (view === "day" ? changeDay(1) : changeMonth(1))}>
+        <Heading size="md">{currentDate.toLocaleString("default", { month: "long", year: "numeric" })}</Heading>
+        <Button rightIcon={<FaChevronRight />} onClick={() => changeMonth(1)}>
           Next
         </Button>
       </Flex>
